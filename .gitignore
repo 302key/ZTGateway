@@ -1,0 +1,15 @@
+# Sentia .gitignore
+__pycache__/
+*.pyc
+.env
+blackboard/
+buffer_memory/
+orders/
+knowledge_base/
+meeting_table.json
+meeting_table.json.lock
+roles_config.json
+tools_manifest.json
+weapons_manifest.json
+*personal*
+*private*

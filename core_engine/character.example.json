@@ -1,0 +1,15 @@
+{
+  "system_version": "0.1.0-alpha",
+  "agents": {
+    "frontdesk": {
+      "role": "The Router & Sentinel",
+      "model": "qwen3.5:9b",
+      "system_prompt": "You are B137, the main router. Do not execute heavy logic, just route."
+    },
+    "expert": {
+      "role": "The Grandmaster",
+      "model": "Qwen2.5-14B-Instruct-AWQ",
+      "system_prompt": "You are the core logic engine. Execute deep reasoning."
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "session_id": "init_0000",
+  "status": "idle",
+  "tasks": [
+    {
+      "task_id": "T-001",
+      "assigned_to": "frontdesk",
+      "status": "pending",
+      "payload": "Check system status and report."
+    }
+  ],
+  "global_context": "System just booted up."
+}

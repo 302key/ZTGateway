@@ -86,7 +86,7 @@ def read_memory_tail(filepath, lines=30):
     except: return ""
 
 # ==========================================
-# 1.5 Weapon Fire Control System
+# 1.5 Control System
 # ==========================================
 def fire_sglang_engine(prompt, dynamic_system_prompt):
     API_URL = "http://127.0.0.1:30000/v1/chat/completions"

@@ -238,7 +238,7 @@ def execute_darwin_protocol():
     tasks = board.get("tasks", [])
     has_updates = False
     
-    needs_gpu_now = any(t.get("status") == "pending" and t.get("assigned_to") in ["Expert", "Honker"] for t in tasks)
+    needs_gpu_now = any(t.get("status") == "pending" and t.get("assigned_to") in ["chief", "auditor"] for t in tasks)
     gpu_status = frontdeskActuator.manage_gpu_tidal_state(needs_gpu_now)
     
     if gpu_status == "suspended_by_heat" and DoomsdayRadar.get_gpu_temp() >= DoomsdayRadar.GPU_CRITICAL_TEMP:
@@ -252,7 +252,7 @@ def execute_darwin_protocol():
             task_id = task.get("id", f"task_{int(time.time())}")
             assignee = task.get("assigned_to", "frontdesk")
             
-            if gpu_status == "suspended_by_heat" or (assignee in ["Expert", "Honker"] and not frontdeskActuator.is_port_open(30000)):
+            if gpu_status == "suspended_by_heat" or (assignee in ["chief", "auditor"] and not frontdeskActuator.is_port_open(30000)):
                 suspend_file = os.path.join(BUFFER_DIR, f"{task_id}_suspend.json")
                 with open(suspend_file, "w", encoding="utf-8") as f:
                     json.dump({"task_context": task, "timestamp": time.time()}, f, ensure_ascii=False)
@@ -271,7 +271,7 @@ def execute_darwin_protocol():
             
             target_mod = agent_info.get("model", "qwen3.5:9b")
             
-            if assignee in ["frontdesk", "Piper", "Librarian", "Security"]:
+            if assignee in ["frontdesk", "captain", "keeper", "security"]:
                 answer = fire_ollama_engine(task.get("prompt"), dynamic_system_prompt, target_mod)
             else:
                 answer = fire_sglang_engine(task.get("prompt"), dynamic_system_prompt)

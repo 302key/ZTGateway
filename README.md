@@ -1,4 +1,3 @@
-# ZTGateway
 ---
 title: "Sentia Protocol: Zero-Trust Intent Architecture"
 codename: "Project Sentia"

@@ -17,6 +17,8 @@ from datetime import datetime
 # ==========================================
 # 0. Physical Boundaries & Environment Setup
 # ==========================================
+os.umask(0o077) # 🔒 绝对气密性钢印：此程序创建的所有文件，除了主人，全宇宙不可读写！
+
 BASE_DIR = os.getenv("ZT_BASE_DIR", os.path.expanduser("~/tmp/ZT"))
 BLACKBOARD_FILE = os.path.join(BASE_DIR, "coffee.example.json")
 LOCK_FILE = os.path.join(BASE_DIR, "coffee.example.json.lock") 
@@ -28,12 +30,12 @@ ROUTER_DIR = os.path.join(BASE_DIR, "router")
 BRIEFING_CACHE = os.path.join(ROUTER_DIR, "briefing_cache")
 PERSONA_FILE = os.path.join(BASE_DIR, "character.example.json") 
 LOG_FILE = os.path.join(ROUTER_DIR, "frontdesk_core.log")
-PENANCE_LOG = os.path.join(ROUTER_DIR, "frontdesk_penance.log")
-INQUISITION_LOG = os.path.join(ROUTER_DIR, "global_inquisition.log")
+RECORDS_LOG = os.path.join(ROUTER_DIR, "frontdesk_RECORDS.log")
+INTERNAL_AUDIT_LOG = os.path.join(ROUTER_DIR, "INTERNAL_AUDIT.log")
 
 for d in [BLACKBOARD_DIR, BUFFER_DIR, BRIEFING_CACHE]:
     os.makedirs(d, exist_ok=True)
-for log_f in [PENANCE_LOG, INQUISITION_LOG]:
+for log_f in [RECORDS_LOG, INTERNAL_AUDIT_LOG]:
     if not os.path.exists(log_f): open(log_f, 'w').close()
 
 log_handler = RotatingFileHandler(LOG_FILE, maxBytes=5*1024*1024, backupCount=3)
@@ -152,13 +154,18 @@ class DoomsdayRadar:
         except: pass
         
         import select
+        # 🛡️ 防误触核弹机制：默认取消！必须敲入 yes 才会爆炸！
+        print(">> Type 'yes' to confirm shutdown, 'wait' to suspend. Defaulting to CANCEL in 60s.")
         for i in range(60, 0, -1):
             i_in, _, _ = select.select([sys.stdin], [], [], 1)
             if i_in:
                 cmd = sys.stdin.readline().strip().lower()
                 if cmd == 'wait': return "suspended"
-                elif cmd == 'no': return "cancelled"
-                elif cmd == 'yes': break
+                elif cmd == 'yes': break # 只有明确确认，才跳出循环执行关机
+                else: return "cancelled"
+        else:
+            print("\n[!] Timeout reached. Evacuation cancelled to prevent accidental shutdown.")
+            return "cancelled" # 60秒没人理，强行中断自杀进程！
         
         # OBFUSCATED: Jump node shutdown sequence
         jump_ip = os.getenv("JUMP_NODE_IP", "10.0.0.3")
@@ -194,10 +201,10 @@ class frontdeskActuator:
         prompt = agent_info.get("system_prompt", f"You are {role_name}.")
         
         if role_name == "frontdesk":
-            penance = read_memory_tail(PENANCE_LOG, 30)
-            inquisition = read_memory_tail(INQUISITION_LOG, 30)
-            if penance.strip(): prompt += f"\n\n[Historical Penance]:\n{penance}"
-            if inquisition.strip(): prompt += f"\n\n[Correction Records]:\n{inquisition}"
+            RECORDS = read_memory_tail(RECORDS_LOG, 30)
+            INTERNAL_AUDIT = read_memory_tail(INTERNAL_AUDIT_LOG, 30)
+            if RECORDS.strip(): prompt += f"\n\n[Historical RECORDS]:\n{RECORDS}"
+            if INTERNAL_AUDIT.strip(): prompt += f"\n\n[Correction Records]:\n{INTERNAL_AUDIT}"
             
             prompt += """
             \n\n[System Protocol]:
@@ -238,7 +245,7 @@ def execute_darwin_protocol():
     tasks = board.get("tasks", [])
     has_updates = False
     
-    needs_gpu_now = any(t.get("status") == "pending" and t.get("assigned_to") in ["chief", "auditor"] for t in tasks)
+    needs_gpu_now = any(t.get("status") == "pending" and t.get("assigned_to") in ["chef", "auditor"] for t in tasks)
     gpu_status = frontdeskActuator.manage_gpu_tidal_state(needs_gpu_now)
     
     if gpu_status == "suspended_by_heat" and DoomsdayRadar.get_gpu_temp() >= DoomsdayRadar.GPU_CRITICAL_TEMP:
@@ -252,7 +259,7 @@ def execute_darwin_protocol():
             task_id = task.get("id", f"task_{int(time.time())}")
             assignee = task.get("assigned_to", "frontdesk")
             
-            if gpu_status == "suspended_by_heat" or (assignee in ["chief", "auditor"] and not frontdeskActuator.is_port_open(30000)):
+            if gpu_status == "suspended_by_heat" or (assignee in ["chef", "auditor"] and not frontdeskActuator.is_port_open(30000)):
                 suspend_file = os.path.join(BUFFER_DIR, f"{task_id}_suspend.json")
                 with open(suspend_file, "w", encoding="utf-8") as f:
                     json.dump({"task_context": task, "timestamp": time.time()}, f, ensure_ascii=False)

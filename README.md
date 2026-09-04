@@ -1,15 +1,15 @@
 ---
-title: "Sentia Protocol: Zero-Trust Intent Architecture"
+title: "Sentia Protocol™: Zero-Trust Intent Architecture"
 codename: "Project Sentia"
 classification: "Maximum Privacy / Local Sovereignty"
 architect: "Webb & Open Source Community"
-version: "0.1.0-alpha"
-last_updated: "2026-09-02"
+version: "0.2.0-alpha"
+last_updated: "2026-09-04"
 paradigm: "Multi-Agent System (MAS) & B2A Economy"
 tags: [Edge Computing, Thin Client, Overlay Network, Differential Privacy]
 ---
 
-# Sentia Protocol: Architecture Whitepaper & Physical Topology
+# Sentia Protocol™: Architecture Whitepaper & Physical Topology
 
 ## 0. Introduction
 As the integration of Large Action Models (LAMs) accelerates across cloud ecosystems, ensuring strict data privacy, regulatory compliance, and user data sovereignty has become a critical enterprise imperative. Sentia is not a standalone operating system, but a **Meta-OS (Intent Middleware)** designed to bridge this gap. Through rigorous physical and logical data segregation, it decouples causal reasoning from external APIs. This ensures that users and enterprises can leverage the intelligence of cloud ecosystems while maintaining absolute sovereignty over their core intent and sensitive data.

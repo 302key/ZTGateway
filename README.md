@@ -56,3 +56,8 @@ Leverages Zone A's local compute to generate multiple ephemeral Shadow IDs, conc
 ## 3. The Strategic Vision
 This is not merely an alternative framework; it is foundational infrastructure for the future B2A (Business-to-Agent) economy. When the Sentia framework is adopted across the open-source community, mobile terminals will efficiently function as pure sensory interfaces. True intelligence, data sovereignty, and causal reasoning will remain securely within the user's localized, roaring hardware enclaves.
 
+---
+
+Legal Disclaimer:
+Sentia Protocol™ and its associated logos are trademarks of The Sentia Project. All codebase contributions from the Open Source Community are governed under the AGPLv3 License.
+
